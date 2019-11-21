@@ -16,12 +16,15 @@ for {node in NODES} {
 		data ("./dados_rt_hrl_lmps_dat/" & node & "-" & year & ".dat");
 		
 		#option solver 'cplex.exe';
-		option solver 'C:\ampl.mswin64\cplex.exe';
+		option solver 'C:\amplide.mswin64\cplex.exe';
 		
 		solve;
 
-		#display q_rem;
-		display e;
+		# display q_rem;
+		display te;
+		display te_24;
+		# display e;
+
 		printf  "total: %.2f\n\n", revenue; # revenue for a perfect forecast
 
 		printf  "%d,%d,%.2f\n", node, year, revenue >> ("pjm-rt-rev.csv");
