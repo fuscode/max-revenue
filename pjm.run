@@ -20,9 +20,10 @@ for {node in NODES} {
 		
 		solve;
 
-		# display q_rem;
-		display te;
-		display te_24;
+		display revenue;
+# display SOC;
+# 		display te;
+# 		display te_24;
 		# display e;
 
 		printf  "total: %.2f\n\n", revenue; # revenue for a perfect forecast
