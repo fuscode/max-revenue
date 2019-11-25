@@ -1,4 +1,4 @@
-param tf := 48;
+param tf := 10;
 
 param p :=
 

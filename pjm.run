@@ -1,13 +1,15 @@
 
 ##### This script calculates the revenue
 reset;
-model 'max-rt-rev.mod';
+model 'max-rt-rev-A.mod';
+# model 'salles.mod';
 
 set YEARS = 2008 .. 2008;
 set NODES;
 data ("nodes.dat");
 
-printf  'node_id,year,revenue\n' > ("pjm-rt-rev.csv");
+printf  'node_id,rev_partial,q_rem\n' > ("pjm-rt-rev.csv");
+# printf  'node_id,year,revenue\n' > ("pjm-rt-rev.csv");
 
 for {node in NODES} {
 	for {year in YEARS}{
@@ -20,15 +22,13 @@ for {node in NODES} {
 		
 		solve;
 
-		display revenue;
 # display SOC;
 # 		display te;
 # 		display te_24;
-		# display e;
-
 		printf  "total: %.2f\n\n", revenue; # revenue for a perfect forecast
 
-		printf  "%d,%d,%.2f\n", node, year, revenue >> ("pjm-rt-rev.csv");
+		printf {t in ti..tf}  "%d,%.2f,%.6f\n", node, rev_parcial[t], q_rem[t] >> ("pjm-rt-rev.csv");
+		# printf  "%d,%d,%.2f\n", node, year, revenue >> ("pjm-rt-rev.csv");
 	}
 }
 
