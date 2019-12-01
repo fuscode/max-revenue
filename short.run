@@ -1,0 +1,48 @@
+
+##### This script calculates the revenue
+reset;
+model 'max-rt-rev-B.mod';
+# model 'salles.mod';
+set YEARS = 2008 .. 2008;
+set NODES;
+data ("nodes.dat");
+
+set Penalty_Cost = 0 .. 7;
+
+param period := 24;
+set SLOTS = ti .. tf/period;
+printf  "node_id,year,te,q_rem,penalty_cost,revenue\n" > ("pjm_rt_rev.csv");
+
+for {node in NODES} {
+	for {year in YEARS}{
+		reset data p, tf, multiplier;
+		data ("./dados_rt_hrl_lmps_dat/" & node & "-" & year & ".dat");
+
+		for {pc in Penalty_Cost}{
+			reset data te_storage, rev_storage, te_part, ti_part, tf_part;
+			let multiplier := multiplier + 1;
+			for {s in SLOTS}{
+				let ti_part := s*period - period + 1;
+				let tf_part := s*period;
+
+				option solver 'C:\amplide.mswin64\cplex.exe';
+				option show_stats 1;
+				# option times 1;
+				solve;
+				display _total_solve_time;
+				display _ampl_time;
+
+				let te_storage := te_storage + te_part;
+				let rev_storage:= rev_storage + revenue;
+			}	
+			printf "%d,%d,%.4f,%.4f,%d,%.4f\n",
+		 	 node,year,te_storage,q_rem[tf],pc,rev_storage >>
+			   ("pjm_rt_rev.csv");
+		}
+	}
+}
+
+display _total_solve_time;
+display _ampl_time;
+
+

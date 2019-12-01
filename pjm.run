@@ -1,8 +1,8 @@
 
 ##### This script calculates the revenue
 reset;
-model 'max-rt-rev-A.mod';
-# model 'salles.mod';
+# model 'max-rt-rev-A.mod';
+model 'salles.mod';
 
 set YEARS = 2008 .. 2008;
 set NODES;
@@ -19,15 +19,16 @@ for {node in NODES} {
 		
 		#option solver 'cplex.exe';
 		option solver 'C:\amplide.mswin64\cplex.exe';
-		
+		# option show_stats 1;
+		# option times 1;
 		solve;
-
-# display SOC;
+		option show_stats 1;
 # 		display te;
 # 		display te_24;
-		printf  "total: %.2f\n\n", revenue; # revenue for a perfect forecast
+		printf  "solve time: %.4f sec\n\n", _total_solve_time;
+		printf  "total revenue: %.2f\n\n", revenue; # revenue for a perfect forecast
 
-		printf {t in ti..tf}  "%d,%.2f,%.6f\n", node, rev_parcial[t], q_rem[t] >> ("pjm-rt-rev.csv");
+		# printf {t in ti..tf}  "%d,%.2f,%.6f\n", node, rev_parcial[t], q_rem[t] >> ("pjm-rt-rev.csv");
 		# printf  "%d,%d,%.2f\n", node, year, revenue >> ("pjm-rt-rev.csv");
 	}
 }

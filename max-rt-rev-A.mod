@@ -2,12 +2,12 @@
 param mwh := 1;
 param mw := 1;
 param ti := 1; 
-param n := 1; #0.985
+param n := 0.985; #0.985
 param tf;
 param p {t in ti..tf};
-param SOC_max = 1;
-param SOC_min = 0;
-param c_b = 100e3 * 0;# range from 0 to 7
+param SOC_max = 0.9;
+param SOC_min = 0.3;
+param c_b = 100e3 * 1;# range from 0 to 7
 param eol = 0.8;
 param f_ba = 2.71e-5;
 
