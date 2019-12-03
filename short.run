@@ -1,13 +1,14 @@
 
 ##### This script calculates the revenue
 reset;
-model 'max-rt-rev-B.mod';
-# model 'salles.mod';
+# model 'max-rt-rev-A.mod';
+# model 'max-rt-rev-B.mod';
+model 'salles.mod';
 set YEARS = 2008 .. 2008;
 set NODES;
 data ("nodes.dat");
 
-set Penalty_Cost = 0 .. 7;
+set Penalty_Cost = 0 .. 0;
 
 param period := 24;
 set SLOTS = ti .. tf/period;

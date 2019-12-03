@@ -43,11 +43,11 @@ subject to c_cons {t in ti_part..tf_part}: SOC[t] = SOC[t-1] - E_from[t] + E_to[
 subject to te_init: E_from[ti_part-1] = te_storage;
 
 # SOC_range depende da carga remanescente e do range de operacao
-subject to DOD_max {t in ti_part..tf_part}: SOC[t] <= q_rem[t] * mwh * SOC_max;
-subject to DOD_min {t in ti_part..tf_part}: SOC[t] >= q_rem[t] * mwh * SOC_min;
+subject to SOC_range_max {t in ti_part..tf_part}: SOC[t] <= q_rem[t] * mwh * SOC_max;
+subject to SOC_range_min {t in ti_part..tf_part}: SOC[t] >= q_rem[t] * mwh * SOC_min;
 
 # EOL criterion
-subject to EOL {t in ti_part..tf_part}: q_rem[t] >= eol;
+# subject to EOL {t in ti_part..tf_part}: q_rem[t] >= eol;
 
 # # Limite de ciclos de carga por dia
 # subject to b_max {t in ti..(tf/24)}: te_24[t] <= ciclos_dia * mwh;

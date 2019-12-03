@@ -1,0 +1,53 @@
+
+##### This script calculates the revenue
+reset;
+# model 'max-rt-rev-A.mod';
+model 'max-rt-rev-B.mod';
+# model 'salles.mod';
+set NODES;
+data ("nodes.dat");
+
+set Penalty_Cost = 1 .. 7;
+
+param period := 24;
+set SLOTS = ti .. tf/period;
+printf  "node_id,hour,te,q_rem,penalty_cost,revenue\n" >
+ ("pjm_rt_rev-10.csv");
+
+for {node in NODES} {
+	reset data p, tf, multiplier;
+	data ("./ten_years_dat/" & node & ".dat");
+
+	for {pc in Penalty_Cost}{
+		reset data te_storage, rev_storage, te_part, ti_part, tf_part;
+		let multiplier := multiplier + 1;
+		for {s in SLOTS}{
+			let ti_part := s*period - period + 1;
+			let tf_part := s*period;
+
+			option solver 'C:\amplide.mswin64\cplex.exe';
+			option show_stats 1;
+			# option times 1;
+			solve;
+			display _total_solve_time;
+			display _ampl_time;
+
+			let te_storage := te_storage + te_part;
+			let rev_storage:= rev_storage + revenue;
+
+			if (tf_part mod 8760 = 0) then {
+				printf "%d,%d,%.4f,%.4f,%d,%.4f\n",
+				 node,tf_part,te_storage,q_rem[tf_part],pc,rev_storage >>
+				 ("pjm_rt_rev-10.csv");
+			};
+		}
+		printf "%d,%d,%.4f,%.4f,%d,%.4f\n",
+		 node,tf_part,te_storage,q_rem[tf],pc,rev_storage >>
+		 ("pjm_rt_rev-10.csv");
+	}
+}
+
+display _total_solve_time;
+display _ampl_time;
+
+
